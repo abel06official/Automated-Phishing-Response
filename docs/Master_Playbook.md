@@ -12,7 +12,7 @@ This document outlines the automation logic deployed in **Shuffle SOAR**. The pl
 
 The workflow follows a linear pipeline with conditional branching based on threat intelligence findings.
 
-![Shuffle Workflow Diagram](docs/images/Screenshot3.png)
+![Shuffle Workflow Diagram](images/Screenshot3.png)
 
 ---
 
@@ -27,7 +27,7 @@ The workflow follows a linear pipeline with conditional branching based on threa
 * **Solution:** A Regex node extracts strictly the URL to prevent sending garbage data to the API.
 * **Pattern Used:** `https?://\S+`
 
-![Regex Logic](docs/images/Screenshot13.png)
+![Regex Logic](images/Screenshot13.png)
 
 ### 3. Data Sanitization (Python)
 * **Technical Challenge:** The VirusTotal API v3 requires URLs to be Base64 encoded. However, standard Base64 libraries add padding characters (`=`) to the end of the string, which causes VirusTotal to return a `404 Not Found` error.
@@ -45,7 +45,7 @@ encoded_id = base64.urlsafe_b64encode(target_url.strip().encode()).decode().stri
 
 print(encoded_id)
 ```
-![python](docs/images/Screenshot14.png)
+![python](images/Screenshot14.png)
 
 ### 4. Threat Intelligence (VirusTotal API)
 * **Action:** Get URL Report (Not "Scan URL", to save API quota and get instant results).
@@ -58,7 +58,7 @@ print(encoded_id)
 * **Logic:** The workflow checks the malicious vote count to filter out False Positives.
 
 * **Condition:** $virustotal_v3_1.body.data.attributes.last_analysis_stats.malicious > 0
-![Logic](docs/images/Screenshot15.png)
+![Logic](images/Screenshot15.png)
 
 ## 6. Incident Response (TheHive 5)
 * **Action:** Create Alert
@@ -66,4 +66,4 @@ print(encoded_id)
 * **Artifact Mapping:** The JSON payload is dynamically constructed to provide analysts with immediate context.
 
 * **Output:** A fully enriched alert in TheHive.
-![hive Logic](docs/images/Screenshot16.png)
+![hive Logic](images/Screenshot16.png)
