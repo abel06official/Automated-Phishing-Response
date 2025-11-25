@@ -16,7 +16,7 @@ By integrating **Wazuh (SIEM)**, **Shuffle (SOAR)**, and **TheHive (Case Managem
 The infrastructure was deployed using a hybrid environment consisting of a Windows 11 endpoint (User Simulation) and an Ubuntu Server (Security Infrastructure).
 
 ![Network Diagram Placeholder](docs/images/diagram.png)
-*(Figure 1: High-level data flow from ingestion to case creation)*
+
 
 ### **The Workflow**
 1.  **Ingestion:** A custom Python script monitors an IMAP inbox for phishing emails.
@@ -50,6 +50,7 @@ The infrastructure was deployed using a hybrid environment consisting of a Windo
 ### 1. Detection (Wazuh)
 Custom rules trigger immediately upon email ingestion.
 ![Wazuh Detection](docs/images/Screenshot1.png)
+
 ![Wazuh Detection](docs/images/Screenshot2.png)
 ### 2. Automation Logic (Shuffle)
 The SOAR workflow handles data cleaning, API errors (404/403 handling), and conditional routing.
@@ -58,11 +59,15 @@ The SOAR workflow handles data cleaning, API errors (404/403 handling), and cond
 ### 3. The Final Alert (TheHive)
 The outcome is a fully enriched ticket. Note the inclusion of the **VirusTotal Score** and **Direct Report Link** in the description.
 ![TheHive Alert](docs/images/Screenshot4.png)
+
 ![Enriched Details](docs/images/Screenshot5.png)
+
+### Virustotal Report 
+![report](docs/images/Screenshot19.png)
 
 ---
 
-## 🔧 Key Configurations & Challenges
+## Key Configurations & Challenges
 
 ### **1. Agent-Based Ingestion (Wodle)**
 Instead of using unstable Cronjobs, I utilized the **Wazuh Command Module** to manage the Python ingestion script. This ensures the script lifecycle is tied to the Agent service.
@@ -92,9 +97,9 @@ File: local_rules.xml (Wazuh Manager)
 </rule>
 ```
 ### **3. API "Padding" Challenge**
-Issue: VirusTotal API rejected standard Base64 encoded URLs due to padding characters (=).
+* Issue: VirusTotal API rejected standard Base64 encoded URLs due to padding characters (=).
 
-Solution: Implemented a custom Python node in Shuffle to strip padding dynamically.
+* Solution: Implemented a custom Python node in Shuffle to strip padding dynamically.
 
 ```Python
 # Shuffle Python Node Logic
@@ -104,13 +109,13 @@ encoded_id = base64.urlsafe_b64encode(target_url.encode()).decode().strip("=")
 ## **How to Run**
 Please refer to the docs/ folder for detailed setup instructions:
 
-**Installation Guide:** Deployment steps for Wazuh, Docker, and TheHive optimization.
+[**Installation Guide:**](docs/Installation_Guide.md) Deployment steps for Wazuh, Docker, and TheHive optimization.
 
-**Detection Rules:** XML rules for parsing and alerting (Server & Agent side).
+[**Detection Rules:**](docs/Detection_Rules.md) XML rules for parsing and alerting (Server & Agent side).
 
-**Master Playbook:** Deep dive into the Shuffle automation logic and JSON mapping.
+[**Master Playbook:**](docs/Master_Playbook.md) Deep dive into the Shuffle automation logic and JSON mapping.
 
-**Architecture:** Detailed network flow and infrastructure specs.
+[**Architecture:**](docs/Architecture.md) Detailed network flow and infrastructure specs.
 
 ## **Future Enhancements**
 While this pipeline successfully automates detection and triage, the following modules are planned for future iterations to achieve a full SOAR (Orchestration & Response) capability:
