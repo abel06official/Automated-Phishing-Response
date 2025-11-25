@@ -18,16 +18,10 @@ sysctl -w vm.max_map_count=262144
 ```
 ![Figure 1: Baseline system resources verification](images/Screenshot7.png)
 
-## 2. Wazuh SIEM Deployment
-Wazuh was deployed using Docker Compose for modularity.
+## 2. TheHive Deployment
+Hive was deployed using Docker Compose for modularity.
 
-### Configuration Changes:
-
-* Updated wazuh.yml to bind to the Static IP of the server.
-
-* Generated custom SSL certificates to prevent Dashboard disconnects.
-
-![Figure 2: Wazuh Manager, Indexer, and Dashboard containers running healthy](images/Screenshot8.png)
+![Figure 2: thehive](images/Screenshot8.png)
 
 ### Agent Configuration (Windows 11)
 The Wazuh Agent was installed on the victim machine to ingest logs. Config: C:\Program Files (x86)\ossec-agent\ossec.conf updated to point to the Wazuh Manager IP.
